@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: openim-msgtransfer-container
-          image: openim/openim-msgtransfer:v3.8.3
+          image: asia-southeast1-docker.pkg.dev/optimal-pursuit-410406/powtain/open-im-server:0d5ee3c456025afe499484cf2c1fb1f3cebc0493
+          command: ["openim-msgtransfer", "-c", "/config"]
           env:
             - name: CONFIG_PATH
               value: "/config"

@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: group-rpc-server-container
-          image: openim/openim-rpc-group:v3.8.3
+          image: asia-southeast1-docker.pkg.dev/optimal-pursuit-410406/powtain/open-im-server:0d5ee3c456025afe499484cf2c1fb1f3cebc0493
+          command: ["openim-rpc-group", "-c", "/config"]
           env:
             - name: CONFIG_PATH
               value: "/config"

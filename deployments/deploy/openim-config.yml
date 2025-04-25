@@ -4,7 +4,7 @@ metadata:
   name: openim-config
 data:
   discovery.yml: |
-    enable: "kubernetes" # "kubernetes" or "etcd"
+    enable: "k8s" # "kubernetes" or "etcd"
     kubernetes:
       namespace: test
     etcd:
@@ -95,7 +95,7 @@ data:
 
     prometheus:
       # Whether to enable prometheus
-      enable: true
+      enable: false
       # Prometheus listening ports, must match the number of api.ports
       ports: [ 12002 ]
       # This address can be accessed via a browser
