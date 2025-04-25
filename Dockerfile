@@ -1,48 +1,60 @@
-# Use Go 1.22 Alpine as the base image for building the application
-FROM golang:1.22-alpine AS builder
+# Copyright © 2023 OpenIM. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-# Define the base directory for the application as an environment variable
-ENV SERVER_DIR=/openim-server
+# OpenIM base image: https://github.com/openim-sigs/openim-base-image
 
-# Set the working directory inside the container based on the environment variable
-WORKDIR $SERVER_DIR
+# Set go mod installation source and proxy
 
-# Set the Go proxy to improve dependency resolution speed
-# ENV GOPROXY=https://goproxy.io,direct
+FROM golang:1.23 AS builder
 
-# Copy all files from the current directory into the container
-COPY . .
+ARG GO111MODULE=on
 
+WORKDIR /openim/openim-server
+
+ENV GO111MODULE=$GO111MODULE
+ENV GOPROXY=$GOPROXY
+RUN go install github.com/magefile/mage@latest
+
+COPY go.mod go.sum ./
 RUN go mod download
 
-# Install Mage to use for building the application
-RUN go install github.com/magefile/mage@v1.15.0
+COPY . .
 
-# Optionally build your application if needed
 RUN mage build
 
-# Using Alpine Linux with Go environment for the final image
-FROM golang:1.22-alpine
+RUN mkdir ./bin/
 
-# Install necessary packages, such as bash
-RUN apk add --no-cache bash
+RUN cp /openim/openim-server/_output/bin/platforms/$(go env GOOS)/$(go env GOARCH)/* ./bin/
 
-# Set the environment and work directory
-ENV SERVER_DIR=/openim-server
-WORKDIR $SERVER_DIR
+FROM ghcr.io/openim-sigs/openim-bash-image:latest
 
-# Copy the compiled binaries and mage from the builder image to the final image
-COPY --from=builder $SERVER_DIR/_output $SERVER_DIR/_output
-COPY --from=builder $SERVER_DIR/config $SERVER_DIR/config
-COPY --from=builder /go/bin/mage /usr/local/bin/mage
-COPY --from=builder $SERVER_DIR/magefile_windows.go $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/magefile_unix.go $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/magefile.go $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/start-config.yml $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/go.mod $SERVER_DIR/
-COPY --from=builder $SERVER_DIR/go.sum $SERVER_DIR/
+WORKDIR /openim/openim-server
 
-RUN go get github.com/openimsdk/gomake@v0.0.14-alpha.5
+COPY --from=builder /openim/openim-server/bin/openim-api /usr/bin/openim-api
+COPY --from=builder /openim/openim-server/bin/openim-cmdutils /usr/bin/openim-cmdutils
+COPY --from=builder /openim/openim-server/bin/openim-crontask /usr/bin/openim-crontask
+COPY --from=builder /openim/openim-server/bin/openim-msggateway /usr/bin/openim-msggateway
+COPY --from=builder /openim/openim-server/bin/openim-msgtransfer /usr/bin/openim-msgtransfer
+COPY --from=builder /openim/openim-server/bin/openim-push /usr/bin/openim-push
+COPY --from=builder /openim/openim-server/bin/openim-rpc-auth /usr/bin/openim-rpc-auth
+COPY --from=builder /openim/openim-server/bin/openim-rpc-conversation /usr/bin/openim-rpc-conversation
+COPY --from=builder /openim/openim-server/bin/openim-rpc-friend /usr/bin/openim-rpc-friend
+COPY --from=builder /openim/openim-server/bin/openim-rpc-group /usr/bin/openim-rpc-group
+COPY --from=builder /openim/openim-server/bin/openim-rpc-msg /usr/bin/openim-rpc-msg
+COPY --from=builder /openim/openim-server/bin/openim-rpc-third /usr/bin/openim-rpc-third
+COPY --from=builder /openim/openim-server/bin/openim-rpc-user /usr/bin/openim-rpc-user
 
-# Set the command to run when the container starts
-ENTRYPOINT ["sh", "-c", "mage start && tail -f /dev/null"]
+COPY --from=builder /openim/openim-server/config /openim/openim-server/config
+COPY --from=builder /openim/openim-server/_output/bin/tools /openim/openim-server/tools/
+
