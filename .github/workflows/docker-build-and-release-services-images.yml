@@ -76,12 +76,15 @@ jobs:
                   while IFS= read -r tag; do
                       tag_args+=(--tag "$GAR_PREFIX/$IMAGE_NAME:$tag")
                   done <<< "${{ steps.meta.outputs.tags }}"
-
+          
+                  docker build $dir -f $dockerfile --tag "$GAR_PREFIX/$IMAGE_NAME:$tag"
+                  docker push "$GAR_PREFIX/$IMAGE_NAME:$tag"
+                  
                   # Build and push the Docker image with all tags
-                  docker buildx build --platform linux/amd64,linux/arm64 \
-                    --file "$dockerfile" \
-                    "${tag_args[@]}" \
-                    --push "$dir"
+                  #docker buildx build --platform linux/amd64,linux/arm64 \
+                  #  --file "$dockerfile" \
+                  #  "${tag_args[@]}" \
+                  #  --push "$dir"
               else
                   echo "No valid Dockerfile found in $dir"
               fi
