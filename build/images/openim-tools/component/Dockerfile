@@ -24,14 +24,14 @@ WORKDIR /openim/openim-server
 
 ENV GO111MODULE=$GO111MODULE
 ENV GOPROXY=$GOPROXY
+RUN go install github.com/magefile/mage@latest
 
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-RUN make clean
-RUN make build BINS=component
+RUN mage build BINS=component
 
 # FROM ghcr.io/openim-sigs/openim-bash-image:latest
 FROM ghcr.io/openim-sigs/openim-bash-image:latest

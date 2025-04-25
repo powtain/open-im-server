@@ -24,13 +24,14 @@ WORKDIR /openim/openim-server
 
 ENV GO111MODULE=$GO111MODULE
 ENV GOPROXY=$GOPROXY
+RUN go install github.com/magefile/mage@latest
 
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-RUN make build BINS=openim-rpc-third
+RUN mage build BINS=openim-rpc-third
 
 RUN cp /openim/openim-server/_output/bin/platforms/$(go env GOOS)/$(go env GOARCH)/openim-rpc-third /usr/bin/openim-rpc-third
 

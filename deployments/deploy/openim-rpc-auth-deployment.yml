@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: auth-rpc-server-container
-          image: openim/openim-rpc-auth:v3.8.3
+          image: asia-southeast1-docker.pkg.dev/optimal-pursuit-410406/powtain/open-im-server:7b84f9ff08b1300fa303992787f6c24821873cc5
+          command: ["openim-rpc-auth", "-c", "/config"]
           imagePullPolicy: Never
           env:
             - name: CONFIG_PATH
@@ -35,3 +36,5 @@ spec:
         - name: openim-config
           configMap:
             name: openim-config
+      imagePullSecrets:
+        - name: dockerconfigjson-github-com

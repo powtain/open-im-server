@@ -3,15 +3,15 @@ name: Build and release services Images
 on:
   push:
     branches:
-      - release-*
+      - main
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: "Tag version to be used for Docker image"
-        required: true
-        default: "v3.8.3"
+
+env:
+  PROJECT_ID: optimal-pursuit-410406
+  REGION: asia-southeast1
+  GAR_PREFIX: asia-southeast1-docker.pkg.dev/optimal-pursuit-410406/powtain
+  VERSION: "v3.8.3"
 
 jobs:
   build-and-push:
@@ -21,28 +21,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.SERVICE_ACCOUNT_KEY }}"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
+
+      - name: "Docker auth"
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Log in to Aliyun Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: registry.cn-hangzhou.aliyuncs.com
-          username: ${{ secrets.ALIREGISTRY_USERNAME }}
-          password: ${{ secrets.ALIREGISTRY_TOKEN }}
 
       - name: Extract metadata for Docker (tags, labels)
         id: meta
@@ -61,31 +55,6 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          ROOT_DIR="build/images"
-          for dir in "$ROOT_DIR"/*/; do
-              # Find Dockerfile or *.dockerfile in a case-insensitive manner
-              dockerfile=$(find "$dir" -maxdepth 1 -type f \( -iname 'dockerfile' -o -iname '*.dockerfile' \) | head -n 1)
-              
-              if [ -n "$dockerfile" ] && [ -f "$dockerfile" ]; then
-                  IMAGE_NAME=$(basename "$dir")
-                  echo "Building Docker image for $IMAGE_NAME with tags:"
-                  
-                  # Initialize tag arguments
-                  tag_args=()
-
-                  # Read each tag and append --tag arguments
-                  while IFS= read -r tag; do
-                      tag_args+=(--tag "${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$tag")
-                      tag_args+=(--tag "ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$tag")
-                      tag_args+=(--tag "registry.cn-hangzhou.aliyuncs.com/openimsdk/$IMAGE_NAME:$tag")
-                  done <<< "${{ steps.meta.outputs.tags }}"
-
-                  # Build and push the Docker image with all tags
-                  docker buildx build --platform linux/amd64,linux/arm64 \
-                    --file "$dockerfile" \
-                    "${tag_args[@]}" \
-                    --push "$dir"
-              else
-                  echo "No valid Dockerfile found in $dir"
-              fi
-          done
+          docker build . --tag ${{ env.GAR_PREFIX }}/open-im-server:${{ github.sha }}
+          docker push ${{ env.GAR_PREFIX }}/open-im-server:${{ github.sha }}
+          

@@ -52,17 +52,6 @@ type CmdOpts struct {
 	configMap        map[string]any
 }
 
-func WithCronTaskLogName() func(*CmdOpts) {
-	return func(opts *CmdOpts) {
-		opts.loggerPrefixName = "openim-crontask"
-	}
-}
-
-func WithLogName(logName string) func(*CmdOpts) {
-	return func(opts *CmdOpts) {
-		opts.loggerPrefixName = logName
-	}
-}
 func WithConfigMap(configMap map[string]any) func(*CmdOpts) {
 	return func(opts *CmdOpts) {
 		opts.configMap = configMap
