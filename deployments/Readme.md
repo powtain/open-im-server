@@ -126,39 +126,23 @@ kubectl apply -f redis-secret.yml -f minio-secret.yml -f mongo-secret.yml -f kaf
 >
 > Namespace is modify to `discovery.yml` in `openim-config.yml`, you can change `kubernetes.namespace` to your namespace.
 
-**Excute `clusterRole.yml`**
-
-`kubectl apply -f ./clusterRole.yml`
-
 ### run all deployments and services
 
 > Note: Ensure that infrastructure services like MinIO, Redis, and Kafka are running before deploying the main applications.
 
 ```bash
-kubectl apply \
+kubectl apply -n test \
   -f openim-api-deployment.yml \
-  -f openim-api-service.yml \
-  -f openim-crontask-deployment.yml \
   -f openim-rpc-user-deployment.yml \
-  -f openim-rpc-user-service.yml \
   -f openim-msggateway-deployment.yml \
-  -f openim-msggateway-service.yml \
   -f openim-push-deployment.yml \
-  -f openim-push-service.yml \
-  -f openim-msgtransfer-service.yml \
   -f openim-msgtransfer-deployment.yml \
   -f openim-rpc-conversation-deployment.yml \
-  -f openim-rpc-conversation-service.yml \
   -f openim-rpc-auth-deployment.yml \
-  -f openim-rpc-auth-service.yml \
   -f openim-rpc-group-deployment.yml \
-  -f openim-rpc-group-service.yml \
   -f openim-rpc-friend-deployment.yml \
-  -f openim-rpc-friend-service.yml \
   -f openim-rpc-msg-deployment.yml \
-  -f openim-rpc-msg-service.yml \
-  -f openim-rpc-third-deployment.yml \
-  -f openim-rpc-third-service.yml
+  -f openim-rpc-third-deployment.yml
 ```
 
 ### Verification
