@@ -25,16 +25,17 @@ WORKDIR /openim/openim-server
 ENV GO111MODULE=$GO111MODULE
 ENV GOPROXY=$GOPROXY
 
-COPY . .
-
+COPY go.mod go.sum ./
 RUN go mod download
+
+COPY . .
 
 RUN make build BINS=openim-api
 
 RUN cp /openim/openim-server/_output/bin/platforms/$(go env GOOS)/$(go env GOARCH)/openim-api /usr/bin/openim-api
 
 # FROM ghcr.io/openim-sigs/openim-bash-image:latest
-FROM alpine:3.18
+FROM ghcr.io/openim-sigs/openim-bash-image:latest
 
 WORKDIR /openim/openim-server
 

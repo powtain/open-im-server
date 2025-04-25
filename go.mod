@@ -1,6 +1,6 @@
 module github.com/openimsdk/open-im-server/v3
 
-go 1.22.7
+go 1.23
 
 require (
 	firebase.google.com/go/v4 v4.14.1
