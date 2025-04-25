@@ -34,7 +34,7 @@ RUN make build BINS=openim-api
 RUN cp /openim/openim-server/_output/bin/platforms/$(go env GOOS)/$(go env GOARCH)/openim-api /usr/bin/openim-api
 
 # FROM ghcr.io/openim-sigs/openim-bash-image:latest
-FROM ghcr.io/openim-sigs/openim-bash-image:latest
+FROM alpine:3.18
 
 WORKDIR /openim/openim-server
 
