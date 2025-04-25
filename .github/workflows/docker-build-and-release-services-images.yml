@@ -73,9 +73,10 @@ jobs:
                   tag_args=()
 
                   # Read each tag and append --tag arguments
-                  while IFS= read -r tag; do
-                      tag_args+=(--tag "$GAR_PREFIX/$IMAGE_NAME:$tag")
-                  done <<< "${{ steps.meta.outputs.tags }}"
+                  read -r tag
+                  #while IFS= read -r tag; do
+                  #    tag_args+=(--tag "$GAR_PREFIX/$IMAGE_NAME:$tag")
+                  #done <<< "${{ steps.meta.outputs.tags }}"
           
                   docker build $dir -f $dockerfile --tag "$GAR_PREFIX/$IMAGE_NAME:$tag"
                   docker push "$GAR_PREFIX/$IMAGE_NAME:$tag"
