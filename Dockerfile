@@ -37,7 +37,11 @@ RUN mkdir ./bin/
 
 RUN cp /openim/openim-server/_output/bin/platforms/$(go env GOOS)/$(go env GOARCH)/* ./bin/
 
-FROM ghcr.io/openim-sigs/openim-bash-image:latest
+# Using Alpine Linux with Go environment for the final image
+FROM golang:1.23-alpine
+
+# Install necessary packages, such as bash
+RUN apk add --no-cache bash
 
 WORKDIR /openim/openim-server
 
