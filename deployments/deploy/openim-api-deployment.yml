@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: openim-api-container
-          image: asia-southeast1-docker.pkg.dev/optimal-pursuit-410406/powtain/open-im-server:3e56100089aa078d528b19c1b4f7845b4ba4b177
-          command: ["openim-api"]
+          image: asia-southeast1-docker.pkg.dev/optimal-pursuit-410406/powtain/open-im-server:0d5ee3c456025afe499484cf2c1fb1f3cebc0493
+          command: ["openim-api", "-c", "/config"]
           env:
             - name: CONFIG_PATH
               value: "/config"
