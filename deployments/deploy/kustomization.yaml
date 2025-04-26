@@ -14,4 +14,4 @@ resources:
 - openim-rpc-third-deployment.yml
 images:
 - name: asia-southeast1-docker.pkg.dev/optimal-pursuit-410406/powtain/open-im-server
-  newTag: 7b84f9ff08b1300fa303992787f6c24821873cc5
+  newTag: 4f885eaa81970081bb38df01bfdf9c6137afce9d
