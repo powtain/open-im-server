@@ -1,9 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- gateway.yaml
-- scraper.yaml
-- translate.yaml
+- openim-api-deployment.yml
+- openim-rpc-user-deployment.yml
+- openim-msggateway-deployment.yml
+- openim-push-deployment.yml
+- openim-msgtransfer-deployment.yml
+- openim-rpc-conversation-deployment.yml
+- openim-rpc-auth-deployment.yml
+- openim-rpc-group-deployment.yml
+- openim-rpc-friend-deployment.yml
+- openim-rpc-msg-deployment.yml
+- openim-rpc-third-deployment.yml
 images:
 - name: asia-southeast1-docker.pkg.dev/optimal-pursuit-410406/powtain/open-im-server
-  newTag: newVersion
+  newTag: 7b84f9ff08b1300fa303992787f6c24821873cc5
