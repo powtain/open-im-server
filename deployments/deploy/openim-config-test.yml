@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: openim-config
+  namespace: test
 data:
   discovery.yml: |
     enable: "k8s" # "kubernetes" or "etcd"
@@ -434,7 +435,7 @@ data:
     # Name of the bucket in MinIO
     bucket: openim
     # Access key ID for MinIO authentication
-    accessKeyID: root   
+    accessKeyID: openim
     # Secret access key for MinIO authentication
     secretAccessKey: y2Tc0yKR
     # Session token for MinIO authentication (optional)
