@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: openim-config
+  namespace: test
 data:
   discovery.yml: |
     enable: "k8s" # "kubernetes" or "etcd"
@@ -12,17 +13,6 @@ data:
       address: [ localhost:12379 ]
       username: ''
       password: ''
-
-    rpcService:
-      user: user-rpc-service
-      friend: friend-rpc-service
-      msg: msg-rpc-service
-      push: push-rpc-service
-      messageGateway: messagegateway-rpc-service
-      group: group-rpc-service
-      auth: auth-rpc-service
-      conversation: conversation-rpc-service
-      third: third-rpc-service
 
   log.yml: |
     # Log storage path, default is acceptable, change to a full path if modification is needed
@@ -338,7 +328,6 @@ data:
       # List of ports that Prometheus listens on; these must match the number of rpc.ports to ensure correct monitoring setup
       ports: [ 12300 ]
 
-
     object:
       # Use MinIO as object storage, or set to "cos", "oss", "kodo", "aws", while also configuring the corresponding settings
       enable: minio
@@ -374,13 +363,22 @@ data:
 
   share.yml: |
     secret: openIM123
-
     imAdminUserID: ["imAdmin"]
 
     # 1: For Android, iOS, Windows, Mac, and web platforms, only one instance can be online at a time
     multiLogin:
-      policy: 1
+      policy: 10
       maxNumOneEnd: 30
+    rpcRegisterName:
+      user: user-rpc-service
+      friend: friend-rpc-service
+      msg: msg-rpc-service
+      push: push-rpc-service
+      messageGateway: messagegateway-rpc-service
+      group: group-rpc-service
+      auth: auth-rpc-service
+      conversation: conversation-rpc-service
+      third: third-rpc-service
 
   kafka.yml: |
     # Username for authentication
@@ -437,7 +435,7 @@ data:
     # Name of the bucket in MinIO
     bucket: openim
     # Access key ID for MinIO authentication
-    accessKeyID: root   
+    accessKeyID: openim
     # Secret access key for MinIO authentication
     secretAccessKey: y2Tc0yKR
     # Session token for MinIO authentication (optional)
@@ -445,7 +443,7 @@ data:
     # Internal address of the MinIO server
     internalAddress: minio:9000
     # External address of the MinIO server, accessible from outside. Supports both HTTP and HTTPS using a domain name
-    externalAddress: https://minio.pwt.world:9000
+    externalAddress: https://minio.test.pwt.world:9000
     # Flag to enable or disable public read access to the bucket
     publicRead: "false"
 

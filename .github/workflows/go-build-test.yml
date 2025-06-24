@@ -1,7 +1,9 @@
 name: Go Build Test
 
 on:
-  push: master
+  push:
+    branches:
+      - master
   pull_request:
     paths-ignore:
       - '**/*.md'
