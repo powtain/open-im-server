@@ -425,7 +425,7 @@ data:
   redis.yml: |
     address: [ "redis-service:6379" ]
     username:
-    password: JP2f3CXoEX5@AZ
+    password: lnvuq3KNX18Cbo
     clusterMode: false
     db: 0
     maxRetry: 10
@@ -773,10 +773,10 @@ data:
         ext: burn after reading
 
   webhooks.yml: |
-    url: http://127.0.0.1:10006/callbackExample
+    url: http://gateway-service.test.svc.cluster.local/api/v1/dm/inner/callback
     beforeSendSingleMsg:
-      enable: false
-      timeout: 5
+      enable: true
+      timeout: 10
       failedContinue: true
       # Only the contentType in allowedTypes will send the callback.
       # Supports two formats: a single type or a range. The range is defined by the lower and upper bounds connected with a hyphen ("-").
@@ -805,8 +805,8 @@ data:
       allowedTypes: []
       deniedTypes: []
     beforeSendGroupMsg:
-      enable: false
-      timeout: 5
+      enable: true
+      timeout: 10
       failedContinue: true
       # See beforeSendSingleMsg comment.
       allowedTypes: []
@@ -842,8 +842,8 @@ data:
       timeout: 5
       failedContinue: true
     beforeGroupOnlinePush:
-      enable: false
-      timeout: 5
+      enable: true
+      timeout: 10
       failedContinue: true
     beforeAddFriend:
       enable: false

@@ -773,10 +773,10 @@ data:
         ext: burn after reading
 
   webhooks.yml: |
-    url: http://127.0.0.1:10006/callbackExample
+    url: http://gateway-service.prod.svc.cluster.local/api/v1/dm/inner/callback
     beforeSendSingleMsg:
-      enable: false
-      timeout: 5
+      enable: true
+      timeout: 10
       failedContinue: true
       # Only the contentType in allowedTypes will send the callback.
       # Supports two formats: a single type or a range. The range is defined by the lower and upper bounds connected with a hyphen ("-").
@@ -805,8 +805,8 @@ data:
       allowedTypes: []
       deniedTypes: []
     beforeSendGroupMsg:
-      enable: false
-      timeout: 5
+      enable: true
+      timeout: 10
       failedContinue: true
       # See beforeSendSingleMsg comment.
       allowedTypes: []
@@ -838,8 +838,8 @@ data:
       timeout: 5
       failedContinue: true
     beforeOnlinePush:
-      enable: false
-      timeout: 5
+      enable: true
+      timeout: 10
       failedContinue: true
     beforeGroupOnlinePush:
       enable: false
